@@ -2,6 +2,9 @@ package com.example.utils;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.common.auth.CredentialsProviderFactory;
+import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
+import com.aliyuncs.exceptions.ClientException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
@@ -14,9 +17,18 @@ import java.util.UUID;
 public class AliOSSUtils {
 
     private String endpoint = "https://oss-cn-nanjing.aliyuncs.com";
-    private String accessKeyId = "LTAI5tFKxoeeLm4XrcjhEQSW";
-    private String accessKeySecret = "gctDL3ejKn1olh456lqmTVJa1R8D1x";
+    EnvironmentVariableCredentialsProvider credentialsProvider;
+    {
+        try {
+            credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
+        } catch (ClientException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private String bucketName = "teachingmanage";
+
+    public AliOSSUtils()  {
+    }
 
     /**
      * 实现上传图片到OSS
@@ -30,7 +42,7 @@ public class AliOSSUtils {
         String fileName = UUID.randomUUID().toString() + originalFilename.substring(originalFilename.lastIndexOf("."));
 
         //上传文件到 OSS
-        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        OSS ossClient = new OSSClientBuilder().build(endpoint, credentialsProvider);
         ossClient.putObject(bucketName, fileName, inputStream);
 
         //文件访问路径

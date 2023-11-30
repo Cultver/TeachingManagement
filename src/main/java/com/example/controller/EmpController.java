@@ -26,6 +26,12 @@ import java.util.List;
 public class EmpController {
     @Autowired(required = false)
     private EmpService empService;
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable Integer id){
+        log.info("根据id查询员工信息, id: {}",id);
+        Emp emp = empService.getById(id);
+        return Result.success(emp);
+    }
     //分页查询
     @GetMapping
     public Result page(@RequestParam(defaultValue = "1") Integer page,
@@ -50,6 +56,14 @@ public class EmpController {
     public Result save(@RequestBody Emp emp){
         log.info("新增员工,emp:{}",emp);
         empService.save(emp);
+        return Result.success();
+    }
+
+    @PutMapping
+    public Result update(@RequestBody Emp emp){
+        log.info("更新员工信息 ：{}",emp);
+        empService.update(emp);
+
         return Result.success();
     }
 }

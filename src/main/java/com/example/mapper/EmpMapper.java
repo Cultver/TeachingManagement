@@ -24,4 +24,16 @@ public interface EmpMapper {
     @Insert("insert into emp(username, name, gender, image, job, entrydate, dept_id, create_time, update_time) " +
             "values(#{username},#{name},#{gender},#{image},#{job},#{entrydate},#{deptId},#{createTime},#{updateTime})")
     void insert(Emp emp);
+    /**
+     * com.example.mapper.EmpMapper.getById():
+     * 根据ID查询员工
+     * @author WH
+     * @date 2023/12/1~0:30
+     No such property: code for class: Script1
+     * @return com.example.pojo.Emp
+     */
+    @Select("select * from emp where id= #{id}")
+    Emp getById(Integer id);
+
+    void update(Emp emp);
 }
