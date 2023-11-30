@@ -5,6 +5,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
 import com.aliyuncs.exceptions.ClientException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
@@ -15,8 +16,8 @@ import java.util.UUID;
  */
 @Component
 public class AliOSSUtils {
-
-    private String endpoint = "https://oss-cn-nanjing.aliyuncs.com";
+    @Value("${aliyun.oss.endpoint}")
+    private String endpoint;
     EnvironmentVariableCredentialsProvider credentialsProvider;
     {
         try {
@@ -25,7 +26,8 @@ public class AliOSSUtils {
             throw new RuntimeException(e);
         }
     }
-    private String bucketName = "teachingmanage";
+    @Value("${aliyun.oss.bucketName}")
+    private String bucketName;
 
     public AliOSSUtils()  {
     }
