@@ -5,7 +5,10 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
 import com.aliyuncs.exceptions.ClientException;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
@@ -14,10 +17,16 @@ import java.util.UUID;
 /**
  * 阿里云 OSS 工具类
  */
+
 @Component
 public class AliOSSUtils {
-    @Value("${aliyun.oss.endpoint}")
-    private String endpoint;
+    //value只能单个注入配置属性，configuration可批量
+//    @Value("${aliyun.oss.endpoint}")
+//    private String endpoint;
+//@Value("${aliyun.oss.bucketName}")
+//private String bucketName;
+    @Autowired
+    private AliOSSProperties aliOSSProperties;
     EnvironmentVariableCredentialsProvider credentialsProvider;
     {
         try {
@@ -26,8 +35,7 @@ public class AliOSSUtils {
             throw new RuntimeException(e);
         }
     }
-    @Value("${aliyun.oss.bucketName}")
-    private String bucketName;
+
 
     public AliOSSUtils()  {
     }
@@ -36,6 +44,8 @@ public class AliOSSUtils {
      * 实现上传图片到OSS
      */
     public String upload(MultipartFile file) throws IOException {
+        String endpoint = aliOSSProperties.getEndpoint();
+        String bucketName = aliOSSProperties.getBucketName();
         // 获取上传的文件的输入流
         InputStream inputStream = file.getInputStream();
 
